@@ -9,16 +9,16 @@ import os
 
 SPRITE_SCALING = 0.5
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 960
+SCREEN_HEIGHT = 768
 SCREEN_TITLE = "Jogo Processamento de imagens"
 
-MOVEMENT_SPEED = 5
+MOVEMENT_SPEED = 4
 
 #moedas adição build coinBouncing
-SPRITE_SCALING_PLAYER = 0.5
+SPRITE_SCALING_PLAYER = 0.2
 SPRITE_SCALING_COIN = 0.5
-COIN_COUNT = 20
+COIN_COUNT = 35
 
 
 
@@ -103,9 +103,21 @@ class MyGame(arcade.Window):
         self.vidas = 5 #semelhante a vida porem ela diminui
         #<adiçoes build moedas with boucing/>
 
-       
+
         # Set the background color
         arcade.set_background_color(arcade.color.AMAZON)
+        
+        #<timer build>
+        self.total_time = 0.0
+        self.timer_text = arcade.Text(
+            text="00:00:00",
+            start_x=SCREEN_WIDTH // 2,
+            start_y=SCREEN_HEIGHT - 50,
+            color=arcade.color.WHITE,
+            font_size=30,
+            anchor_x="center",
+        )
+        #</timer build>
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -130,6 +142,11 @@ class MyGame(arcade.Window):
 
         #<adiçoes build moedas with boucing>
          # Create the coins
+
+        #<timer build>
+        self.total_time = 0.0
+        #<timer build/>
+
         for coins in range(COIN_COUNT):
 
             # Create the coin instance
@@ -147,6 +164,8 @@ class MyGame(arcade.Window):
             self.coin_list.append(coin)
         #<adiçoes build moedas with boucing/>
 
+
+
     def on_draw(self):
         """
         Render the screen.
@@ -159,10 +178,15 @@ class MyGame(arcade.Window):
 
         #<adiçoes build moedas with boucing>   
         self.all_sprites_list.draw() 
-        # Put the text on the screen. DEPOIS FAZER COM QUE ISSO MOSTRE O TESTO DE VIDA E MUNIÇÃO NA PROXIMA BUILD
+        # Put the text on the screen.
         output = f"vidas: {self.vidas}"
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
         #<adiçoes build moedas with boucing/>
+
+        #<timer>
+        # Draw the timer text
+        self.timer_text.draw()
+        #<timer/>
 
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -181,6 +205,19 @@ class MyGame(arcade.Window):
             coin.remove_from_sprite_lists()
             self.vidas -= 1
         #<adiçoes build moedas with boucing/>
+
+        #<timer>
+         # Accumulate the total time
+        self.total_time += delta_time
+        # Calculate minutes
+        minutes = int(self.total_time) // 60
+        # Calculate seconds by using a modulus (remainder)
+        seconds = int(self.total_time) % 60
+        # Calculate 100s of a second
+        seconds_100s = int((self.total_time - seconds) * 100)
+        # Use string formatting to create a new text string for our timer
+        self.timer_text.text = f"{minutes:02d}:{seconds:02d}:{seconds_100s:02d}"
+        #<timer/>
 
     def on_key_press(self, key, modifiers):
 
