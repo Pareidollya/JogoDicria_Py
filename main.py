@@ -108,11 +108,12 @@ class MyGame(arcade.Window):
         arcade.set_background_color(arcade.color.AMAZON)
         
         #<timer build>
+        self.lose_position = 1
         self.total_time = 0.0
         self.timer_text = arcade.Text(
             text="00:00:00",
             start_x=SCREEN_WIDTH // 2,
-            start_y=SCREEN_HEIGHT - 50,
+            start_y=SCREEN_HEIGHT // self.lose_position - 50 ,
             color=arcade.color.WHITE,
             font_size=30,
             anchor_x="center",
