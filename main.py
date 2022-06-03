@@ -16,7 +16,7 @@ SCREEN_TITLE = "Jogo Processamento de imagens"
 MOVEMENT_SPEED = 4
 
 #moedas adição build coinBouncing
-SPRITE_SCALING_PLAYER = 0.2
+SPRITE_SCALING_PLAYER = 0.4
 SPRITE_SCALING_COIN = 0.5
 COIN_COUNT = 35
 
@@ -30,7 +30,6 @@ class Player(arcade.Sprite): #classe do player
         # Move player.
 
         # Remove these lines if physics engine is moving player.
-
         self.center_x += self.change_x
         self.center_y += self.change_y
 
@@ -79,7 +78,7 @@ class Coin(arcade.Sprite): #adição build coinBouncing
 class MyGame(arcade.Window):
     def __init__(self, width, height, title):
         """
-        Initializer
+        Iniicalizador das variaveis
         """
 
         # Call the parent class initializer
@@ -100,28 +99,30 @@ class MyGame(arcade.Window):
          # vidas
         self.all_sprites_list = None
         self.coin_list = None
-        self.vidas = 5 #semelhante a vida porem ela diminui
+        self.vidas = None #semelhante a vida porem ela diminui
         #<adiçoes build moedas with boucing/>
 
 
         # Set the background color
-        arcade.set_background_color(arcade.color.AMAZON)
+        arcade.set_background_color(arcade.color.BLACK)
         
         #<timer build>
-        self.lose_position = 1
+        self.lose_position = 1 #adicionado para mudar a posição do tempo
+        self.font_size = 30
+        
         self.total_time = 0.0
         self.timer_text = arcade.Text(
             text="00:00:00",
             start_x=SCREEN_WIDTH // 2,
             start_y=SCREEN_HEIGHT // self.lose_position - 50 ,
             color=arcade.color.WHITE,
-            font_size=30,
+            font_size= self.font_size,
             anchor_x="center",
         )
         #</timer build>
 
     def setup(self):
-        """ Set up the game and initialize the variables. """
+        """ Configurar as variaveis iniciadas anteriormente """
 
         # Sprite lists
         self.player_list = arcade.SpriteList()
@@ -136,7 +137,7 @@ class MyGame(arcade.Window):
 
         # Set up the player
         self.player_sprite = Player(":resources:images/animated_characters/female_person/"
-                                    "femalePerson_idle.png", SPRITE_SCALING)
+                                    "femalePerson_idle.png", SPRITE_SCALING_PLAYER)
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 50
         self.player_list.append(self.player_sprite)
@@ -149,7 +150,6 @@ class MyGame(arcade.Window):
         #<timer build/>
 
         for coins in range(COIN_COUNT):
-
             # Create the coin instance
             # Coin image from kenney.nl
             coin = Coin(":resources:images/items/coinGold.png", SPRITE_SCALING_COIN)
@@ -220,8 +220,9 @@ class MyGame(arcade.Window):
         self.timer_text.text = f"{minutes:02d}:{seconds:02d}:{seconds_100s:02d}"
         #<timer/>
 
-    def on_key_press(self, key, modifiers):
 
+
+    def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
         # If the player presses a key, update the speed
@@ -253,14 +254,14 @@ class MyGame(arcade.Window):
 
         elif key == arcade.key.A or key == arcade.key.D:
             self.player_sprite.change_x = 0
-    
+        
     
 
 def main():
-    """ Main function """
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     window.setup()
     arcade.run()
+    
 
 
 if __name__ == "__main__":
