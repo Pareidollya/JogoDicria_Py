@@ -1,7 +1,7 @@
 # JogoDicria_Py
 jogo dicria utilizando python arcade. Para realização da prova de Processamento de imagens
 
-objetivo: sobreviver o maixmo
+objetivo: sobreviver o máximo
 
 
 mapa básico
@@ -41,3 +41,5 @@ sprites e colisão
 vida do jogador (perder vida na colisão)
 
 movimentação das sprites pelo mapa
+
+disparar
