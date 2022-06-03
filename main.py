@@ -1,7 +1,7 @@
 
 import arcade
-
 import random
+
 import math
 import os
 
@@ -20,7 +20,8 @@ SPRITE_SCALING_PLAYER = 0.4
 SPRITE_SCALING_COIN = 0.5
 COIN_COUNT = 35
 
-
+BULLET_SPEED = 5 
+SPRITE_SCALING_LASER = 0.8
 
 class Player(arcade.Sprite): #classe do player
     def update(self):
@@ -121,6 +122,23 @@ class MyGame(arcade.Window):
         )
         #</timer build>
 
+        #<shoot>
+        # Set the working directory (where we expect to find files) to the same
+        # directory this .py file is in. You can leave this out of your own
+        # code, but it is needed to easily run the examples using "python -m"
+        # as mentioned at the top of this program.
+
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        os.chdir(file_path)
+
+        self.bullet_list = None
+
+                # Load sounds. Sounds from kenney.nl
+        self.gun_sound = arcade.sound.load_sound(":resources:sounds/laser1.wav")
+        self.hit_sound = arcade.sound.load_sound(":resources:sounds/phaseJump1.wav")
+
+        #</shoot>
+
     def setup(self):
         """ Configurar as variaveis iniciadas anteriormente """
 
@@ -149,6 +167,10 @@ class MyGame(arcade.Window):
         self.total_time = 0.0
         #<timer build/>
 
+        #<shoot>
+        self.bullet_list = arcade.SpriteList()
+        #</shoot>
+
         for coins in range(COIN_COUNT):
             # Create the coin instance
             # Coin image from kenney.nl
@@ -165,7 +187,7 @@ class MyGame(arcade.Window):
             self.coin_list.append(coin)
         #<adiçoes build moedas with boucing/>
 
-
+       
 
     def on_draw(self):
         """
@@ -188,6 +210,10 @@ class MyGame(arcade.Window):
         # Draw the timer text
         self.timer_text.draw()
         #<timer/>
+
+        #<shoot>
+        self.bullet_list.draw()
+        #</shoot>
 
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -220,6 +246,28 @@ class MyGame(arcade.Window):
         self.timer_text.text = f"{minutes:02d}:{seconds:02d}:{seconds_100s:02d}"
         #<timer/>
 
+        #<shoot>
+        self.bullet_list.update()
+
+        # Loop through each bullet
+        for bullet in self.bullet_list:
+
+            # Check this bullet to see if it hit a coin
+            hit_list = arcade.check_for_collision_with_list(bullet, self.coin_list)
+
+            # If it did, get rid of the bullet
+            if len(hit_list) > 0:
+                bullet.remove_from_sprite_lists()
+
+            # For every coin we hit, add to the score and remove the coin
+            for coin in hit_list:
+                coin.remove_from_sprite_lists()
+
+            # If the bullet flies off-screen, remove it.
+            if bullet.bottom > self.width or bullet.top < 0 or bullet.right < 0 or bullet.left > self.width:
+                bullet.remove_from_sprite_lists()
+        #</shoot>
+
 
 
     def on_key_press(self, key, modifiers):
@@ -238,7 +286,7 @@ class MyGame(arcade.Window):
         elif key == arcade.key.D:
             self.player_sprite.change_x = MOVEMENT_SPEED
 
-
+  
 
     def on_key_release(self, key, modifiers):
 
@@ -254,7 +302,46 @@ class MyGame(arcade.Window):
 
         elif key == arcade.key.A or key == arcade.key.D:
             self.player_sprite.change_x = 0
-        
+
+      #<shoot>
+    def on_mouse_press(self, x, y, button, modifiers):
+        """ Called whenever the mouse button is clicked. """
+
+        # Create a bullet
+        bullet = arcade.Sprite(":resources:images/space_shooter/laserBlue01.png", SPRITE_SCALING_LASER)
+
+        # Position the bullet at the player's current location
+        start_x = self.player_sprite.center_x
+        start_y = self.player_sprite.center_y
+        bullet.center_x = start_x
+        bullet.center_y = start_y
+
+        # Get from the mouse the destination location for the bullet
+        # IMPORTANT! If you have a scrolling screen, you will also need
+        # to add in self.view_bottom and self.view_left.
+        dest_x = x
+        dest_y = y
+
+        # Do math to calculate how to get the bullet to the destination.
+        # Calculation the angle in radians between the start points
+        # and end points. This is the angle the bullet will travel.
+        x_diff = dest_x - start_x
+        y_diff = dest_y - start_y
+        angle = math.atan2(y_diff, x_diff)
+
+        # Angle the bullet sprite so it doesn't look like it is flying
+        # sideways.
+        bullet.angle = math.degrees(angle)
+        print(f"Bullet angle: {bullet.angle:.2f}")
+
+        # Taking into account the angle, calculate our change_x
+        # and change_y. Velocity is how fast the bullet travels.
+        bullet.change_x = math.cos(angle) * BULLET_SPEED
+        bullet.change_y = math.sin(angle) * BULLET_SPEED
+
+        # Add the bullet to the appropriate lists
+        self.bullet_list.append(bullet)
+    #</shoot>
     
 
 def main():
