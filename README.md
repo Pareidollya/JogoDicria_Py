@@ -26,11 +26,6 @@ aumentar a dificuldade por segundo passado.
 
 tipos de inimigo
 
-materiais da documentação utilizados 
-https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard
-
-https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
-
 
 desenvolvimento:
 
@@ -43,3 +38,9 @@ vida do jogador (perder vida na colisão)
 movimentação das sprites pelo mapa
 
 disparar
+
+
+materiais de referencia utilizados 
+movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard 
+
+disparos: https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
