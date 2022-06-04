@@ -23,6 +23,9 @@ COIN_COUNT = 35
 BULLET_SPEED = 7
 SPRITE_SCALING_LASER = 0.8
 
+FOLLOWER_SPRITE_COUNT = 7
+FOLLOWER_SPRITE_SPEED = 1
+
 class Player(arcade.Sprite): #classe do player
     def update(self):
 
@@ -75,6 +78,34 @@ class Coin(arcade.Sprite): #adição build coinBouncing
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
 
+
+#<follower sprites>
+class CoinFollower(arcade.Sprite):
+    """
+    This class represents the coins on our screen. It is a child class of
+    the arcade library's "Sprite" class.
+    """
+
+    def follow_sprite(self, player_sprite):
+        """
+        This function will move the current sprite towards whatever
+        other sprite is specified as a parameter.
+
+        We use the 'min' function here to get the sprite to line up with
+        the target sprite, and not jump around if the sprite is not off
+        an exact multiple of SPRITE_SPEED.
+        """
+
+        if self.center_y < player_sprite.center_y:
+            self.center_y += min(FOLLOWER_SPRITE_SPEED, player_sprite.center_y - self.center_y)
+        elif self.center_y > player_sprite.center_y:
+            self.center_y -= min(FOLLOWER_SPRITE_SPEED, self.center_y - player_sprite.center_y)
+
+        if self.center_x < player_sprite.center_x:
+            self.center_x += min(FOLLOWER_SPRITE_SPEED, player_sprite.center_x - self.center_x)
+        elif self.center_x > player_sprite.center_x:
+            self.center_x -= min(FOLLOWER_SPRITE_SPEED, self.center_x - player_sprite.center_x)
+#</follower sprites>
 
 class MyGame(arcade.Window):
     def __init__(self, width, height, title):
@@ -142,6 +173,13 @@ class MyGame(arcade.Window):
         self.next_coin_respawn_time = None #tempo para spawn das proximas moedas
         self.await_new_coin_spawn = False
         #</coins respawn> 
+
+        #<follower sprites>
+        self.next_follower_respawn_time = None #tempo para spawn das proximas moedas
+        self.await_new_follower_spawn = False
+
+        self.follower_list = None
+        #</follower sprites>
     def setup(self):
         """ Configurar as variaveis iniciadas anteriormente """
 
@@ -174,6 +212,10 @@ class MyGame(arcade.Window):
         self.bullet_list = arcade.SpriteList()
         #</shoot>
 
+        #<follower sprites>
+        self.follower_list = arcade.SpriteList()
+        #</followers sprites>
+
         for coins in range(COIN_COUNT):
             # Create the coin instance
             # Coin image from kenney.nl
@@ -190,7 +232,7 @@ class MyGame(arcade.Window):
             self.coin_list.append(coin)
         #<adiçoes build moedas with boucing/>
 
-       
+
 
     def on_draw(self):
         """
@@ -222,6 +264,14 @@ class MyGame(arcade.Window):
         coin_count = f"coin count: {len(self.coin_list)}"
         arcade.draw_text(coin_count, 10, 40, arcade.color.WHITE, 14)
         #</coins debug>
+
+        #<follower sprites >
+        self.follower_list.draw()
+
+        follower_count = f"followers count: {len(self.follower_list)}"
+        arcade.draw_text(follower_count, 10, 60, arcade.color.WHITE, 14)
+
+        #<follower sprites/>
 
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -258,7 +308,6 @@ class MyGame(arcade.Window):
 
         #<shoot>
         self.bullet_list.update()
-        
         # Loop through each bullet  
         for bullet in self.bullet_list:
 
@@ -305,7 +354,34 @@ class MyGame(arcade.Window):
                     self.all_sprites_list.append(coin)
                     self.coin_list.append(coin)
         #</respawn coins>
-            
+        
+        #<spawn followers>
+        if len(self.follower_list) < FOLLOWER_SPRITE_COUNT:
+            for i in range(FOLLOWER_SPRITE_COUNT):
+                # Create the coin instance
+                # Coin image from kenney.nl
+                follower = CoinFollower(":resources:images/items/coinGold.png", SPRITE_SCALING_COIN)
+
+                # Position the coin
+                follower.center_x = random.randrange(SCREEN_WIDTH)
+                follower.center_y = random.randrange(SCREEN_HEIGHT)
+
+                # Add the coin to the lists
+                self.follower_list.append(follower)
+        #<spawn followers/>
+
+        #<follower movement>
+        for follower in self.follower_list:
+            follower.follow_sprite(self.player_sprite)
+
+        # Generate a list of all sprites that collided with the player.
+        hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.follower_list)
+
+        # Loop through each colliding sprite, remove it, and add to the score.
+        for follower in hit_list:
+            follower.remove_from_sprite_lists()
+            self.vidas -= 1
+        #<follower movement>
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
