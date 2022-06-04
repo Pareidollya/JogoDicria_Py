@@ -2,42 +2,45 @@
 jogo dicria utilizando python arcade. Para realização da prova de Processamento de imagens
 
 objetivo: sobreviver o máximo
+    mapa básico
 
+    mecânicas básicas de movimentação 
 
-mapa básico
+    spawn de inimigos 
 
-mecânicas básicas de movimentação 
+    direcionamento dos inimigos
+    colisão do inimigo ao player tirar vida
 
-spawn de inimigos 
+    direcionar inimigos ao player 
 
-direcionamento dos inimigos
+    mecânicas de disparo do player (similar projetil apresentado)
 
-direcionar inimigos ao player 
+    colisão do disparo a inimigos (matar)
 
-colisão do inimigo ao player tirar vida
+    pontuação por kill
 
-mecânicas de disparo do player (similar projetil apresentado)
+    aumentar a dificuldade por segundo passado. (surgir inimigos)
 
-colisão do disparo a inimigos (matar)
-
-pontuação por kill
-
-aumentar a dificuldade por segundo passado.
-
-tipos de inimigo
+    tipos de inimigo
 
 
 desenvolvimento:
 
-funções de movimentação no: w a s d
+    Funções de movimentação no: w a s d;
 
-sprites e colisão
+    Sprites e colisão;
 
-vida do jogador (perder vida na colisão)
+    Vida do jogador (perder vida na colisão);
 
-movimentação das sprites pelo mapa
+    Movimentação das sprites pelo mapa;
 
-disparar
+    Disparar;
+
+    Resurgir novos sprites caso esteja abaixo do numero configurado;
+
+
+
+
 
 
 materiais de referencia utilizados 
