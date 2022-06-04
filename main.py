@@ -249,6 +249,7 @@ class MyGame(arcade.Window):
         minutes = int(self.total_time) // 60
         # Calculate seconds by using a modulus (remainder)
         seconds = int(self.total_time) % 60
+
         # Calculate 100s of a second
         seconds_100s = int((self.total_time - seconds) * 100)
         # Use string formatting to create a new text string for our timer
@@ -277,16 +278,17 @@ class MyGame(arcade.Window):
                 bullet.remove_from_sprite_lists()
         #</shoot>
 
-        #print(seconds)
-        print(len(self.coin_list))
+        print(self.total_time)
+        # print(seconds)
+        #print(len(self.coin_list))
 
         #<respawn coins>
         if len(self.coin_list) < COIN_COUNT:
             if(self.await_new_coin_spawn == False):
-                self.next_coin_respawn_time = seconds + random.randrange(5, 10) #tempo de spawn de proximas moedas sera ate 20 sec
+                self.next_coin_respawn_time = self.total_time + random.randrange(5, 10) #tempo de spawn de proximas moedas sera ate 20 sec
                 self.await_new_coin_spawn = True
             
-            if(seconds >= self.next_coin_respawn_time and self.await_new_coin_spawn == True):
+            if(self.total_time >= self.next_coin_respawn_time and self.await_new_coin_spawn == True):
                 self.await_new_coin_spawn = False
                 for coins in range(COIN_COUNT - len(self.coin_list)):
                     # Create the coin instance
