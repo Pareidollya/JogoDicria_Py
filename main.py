@@ -20,7 +20,7 @@ SPRITE_SCALING_PLAYER = 0.4
 SPRITE_SCALING_COIN = 0.5
 COIN_COUNT = 35
 
-BULLET_SPEED = 5 
+BULLET_SPEED = 7
 SPRITE_SCALING_LASER = 0.8
 
 class Player(arcade.Sprite): #classe do player
@@ -136,9 +136,12 @@ class MyGame(arcade.Window):
                 # Load sounds. Sounds from kenney.nl
         self.gun_sound = arcade.sound.load_sound(":resources:sounds/laser1.wav")
         self.hit_sound = arcade.sound.load_sound(":resources:sounds/phaseJump1.wav")
-
         #</shoot>
 
+        #< coins respawn>
+        self.next_coin_respawn_time = None #tempo para spawn das proximas moedas
+        self.await_new_coin_spawn = False
+        #</coins respawn> 
     def setup(self):
         """ Configurar as variaveis iniciadas anteriormente """
 
@@ -215,6 +218,11 @@ class MyGame(arcade.Window):
         self.bullet_list.draw()
         #</shoot>
 
+        #<coins debug>
+        coin_count = f"coin count: {len(self.coin_list)}"
+        arcade.draw_text(coin_count, 10, 40, arcade.color.WHITE, 14)
+        #</coins debug>
+
     def on_update(self, delta_time):
         """ Movement and game logic """
         # Move the player
@@ -223,6 +231,7 @@ class MyGame(arcade.Window):
         #<adiçoes build moedas with boucing>  
         # Generate a list of all sprites that collided with the player.
 
+        #aqui irá entrar lista de vidas, munição e moedas q seguem 
         self.all_sprites_list.update()
         hit_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                         self.coin_list)
@@ -248,8 +257,8 @@ class MyGame(arcade.Window):
 
         #<shoot>
         self.bullet_list.update()
-
-        # Loop through each bullet
+        
+        # Loop through each bullet  
         for bullet in self.bullet_list:
 
             # Check this bullet to see if it hit a coin
@@ -268,7 +277,33 @@ class MyGame(arcade.Window):
                 bullet.remove_from_sprite_lists()
         #</shoot>
 
+        #print(seconds)
+        print(len(self.coin_list))
 
+        #<respawn coins>
+        if len(self.coin_list) < COIN_COUNT:
+            if(self.await_new_coin_spawn == False):
+                self.next_coin_respawn_time = seconds + random.randrange(5, 10) #tempo de spawn de proximas moedas sera ate 20 sec
+                self.await_new_coin_spawn = True
+            
+            if(seconds >= self.next_coin_respawn_time and self.await_new_coin_spawn == True):
+                self.await_new_coin_spawn = False
+                for coins in range(COIN_COUNT - len(self.coin_list)):
+                    # Create the coin instance
+                    # Coin image from kenney.nl
+                    coin = Coin(":resources:images/items/coinGold.png", SPRITE_SCALING_COIN)
+
+                    # Position the coin
+                    coin.center_x = random.randrange(SCREEN_WIDTH)
+                    coin.center_y = random.randrange(SCREEN_HEIGHT)
+                    coin.change_x = random.randrange(-3, 4)
+                    coin.change_y = random.randrange(-3, 4)
+
+                    # Add the coin to the lists
+                    self.all_sprites_list.append(coin)
+                    self.coin_list.append(coin)
+        #</respawn coins>
+            
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
