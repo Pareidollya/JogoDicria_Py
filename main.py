@@ -24,7 +24,7 @@ BULLET_SPEED = 7
 SPRITE_SCALING_LASER = 0.8
 
 FOLLOWER_SPRITE_COUNT = 7
-FOLLOWER_SPRITE_SPEED = 1
+FOLLOWER_SPRITE_SPEED = 0.6
 
 class Player(arcade.Sprite): #classe do player
     def update(self):
@@ -310,24 +310,32 @@ class MyGame(arcade.Window):
         self.bullet_list.update()
         # Loop through each bullet  
         for bullet in self.bullet_list:
-
             # Check this bullet to see if it hit a coin
             hit_list = arcade.check_for_collision_with_list(bullet, self.coin_list)
-
+            #hit_list = arcade.check_for_collision_with_list(bullet, self.follower_list)
             # If it did, get rid of the bullet
             if len(hit_list) > 0:
                 bullet.remove_from_sprite_lists()
 
             # For every coin we hit, add to the score and remove the coin
-            for coin in hit_list:
-                coin.remove_from_sprite_lists()
+            for follower in hit_list:
+                follower.remove_from_sprite_lists()
 
-            # If the bullet flies off-screen, remove it.
+            if bullet.bottom > self.width or bullet.top < 0 or bullet.right < 0 or bullet.left > self.width:
+                bullet.remove_from_sprite_lists()
+
+            hit_list_followres = arcade.check_for_collision_with_list(bullet, self.follower_list)
+
+            if len(hit_list_followres) > 0:
+                bullet.remove_from_sprite_lists()
+
+            for follower in hit_list_followres:
+                follower.remove_from_sprite_lists()
             if bullet.bottom > self.width or bullet.top < 0 or bullet.right < 0 or bullet.left > self.width:
                 bullet.remove_from_sprite_lists()
         #</shoot>
 
-        print(self.total_time)
+        #print(self.total_time)
         # print(seconds)
         #print(len(self.coin_list))
 
@@ -367,6 +375,7 @@ class MyGame(arcade.Window):
                 follower.center_y = random.randrange(SCREEN_HEIGHT)
 
                 # Add the coin to the lists
+                self.all_sprites_list.append(follower)
                 self.follower_list.append(follower)
         #<spawn followers/>
 
