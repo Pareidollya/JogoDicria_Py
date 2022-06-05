@@ -20,7 +20,7 @@ SPRITE_SCALING_PLAYER = 0.4
 SPRITE_SCALING_COIN = 0.5
 COIN_COUNT = 35
 
-BULLET_SPEED = 7
+BULLET_SPEED = 9
 SPRITE_SCALING_LASER = 0.8
 
 FOLLOWER_SPRITE_COUNT = 7
@@ -179,6 +179,9 @@ class MyGame(arcade.Window):
         self.await_new_follower_spawn = False
 
         self.follower_list = None
+
+        self.max_followers = None
+        self.followers_speed = None
         #</follower sprites>
     def setup(self):
         """ Configurar as variaveis iniciadas anteriormente """
@@ -214,6 +217,8 @@ class MyGame(arcade.Window):
 
         #<follower sprites>
         self.follower_list = arcade.SpriteList()
+        self.max_followers = FOLLOWER_SPRITE_COUNT
+        self.followers_speed = FOLLOWER_SPRITE_SPEED
         #</followers sprites>
 
         for coins in range(COIN_COUNT):
@@ -364,21 +369,6 @@ class MyGame(arcade.Window):
         #</respawn coins>
         
         #<spawn followers>
-        if len(self.follower_list) < FOLLOWER_SPRITE_COUNT:
-            for i in range(FOLLOWER_SPRITE_COUNT):
-                # Create the coin instance
-                # Coin image from kenney.nl
-                follower = CoinFollower(":resources:images/items/coinGold.png", SPRITE_SCALING_COIN)
-
-                # Position the coin
-                follower.center_x = random.randrange(SCREEN_WIDTH)
-                follower.center_y = random.randrange(SCREEN_HEIGHT)
-
-                # Add the coin to the lists
-                self.all_sprites_list.append(follower)
-                self.follower_list.append(follower)
-        #<spawn followers/>
-
         #<follower movement>
         for follower in self.follower_list:
             follower.follow_sprite(self.player_sprite)
@@ -391,6 +381,29 @@ class MyGame(arcade.Window):
             follower.remove_from_sprite_lists()
             self.vidas -= 1
         #<follower movement>
+        if len(self.follower_list) < self.max_followers:
+            if(self.await_new_follower_spawn == False):
+                self.next_follower_respawn_time = self.total_time + random.randrange(7, 15)
+                self.await_new_follower_spawn = True
+
+            if(self.total_time >= self.next_follower_respawn_time and self.await_new_follower_spawn == True):   
+                self.await_new_follower_spawn = False
+                for i in range(self.max_followers - len(self.follower_list)):
+                    # Create the coin instance
+                    # Coin image from kenney.nl
+                    follower = CoinFollower(":resources:images/items/coinGold.png", SPRITE_SCALING_COIN)
+
+                    # Position the coin
+                    follower.center_x = random.randrange(SCREEN_WIDTH)
+                    follower.center_y = random.randrange(SCREEN_HEIGHT)
+
+                    # Add the coin to the lists
+                    self.all_sprites_list.append(follower)
+                    self.follower_list.append(follower)
+        
+        #<spawn followers/>
+
+            
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -465,13 +478,11 @@ class MyGame(arcade.Window):
         self.bullet_list.append(bullet)
     #</shoot>
     
-
 def main():
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     window.setup()
     arcade.run()
     
-
 
 if __name__ == "__main__":
     main()
