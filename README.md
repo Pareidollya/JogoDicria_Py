@@ -44,13 +44,15 @@ Desenvolvimento:
 
     Disparar;
     
-    Timer para exibição do tempo e controlar mecanicas de resurgimento;
+    Timer para exibição do tempo e controlar mecânicas de resurgimento;
 
     Resurgir novos sprites caso esteja abaixo do numero configurado;
 
     Sprites que seguem o player;
 
-    Aumentar numero de surgimentos e velocidade dos sprites conforme o tempo avance;
+    Aumentar numero de surgimentos e velocidade dos sprites conforme o tempo avance;]
+
+    Spawn de vidas pelo mapa;
 
 
 
