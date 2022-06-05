@@ -52,14 +52,14 @@ desenvolvimento:
 
 materiais de referencia utilizados 
 
-    python arcade: https://api.arcade.academy/en/latest/index.html
+   python arcade: https://api.arcade.academy/en/latest/index.html
 
-    movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard
+   movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard
     
-    bouncing sprites: https://api.arcade.academy/en/latest/examples/sprite_collect_coins_move_bouncing.html#sprite-collect-coins-move-bouncing
+   bouncing sprites: https://api.arcade.academy/en/latest/examples/sprite_collect_coins_move_bouncing.html#sprite-collect-coins-move-bouncing
 
-    follower sprites: https://api.arcade.academy/en/latest/examples/sprite_follow_simple.html#sprite-follow-simple
+   follower sprites: https://api.arcade.academy/en/latest/examples/sprite_follow_simple.html#sprite-follow-simple
 
-    disparos: https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
+   disparos: https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
 
-    timer: https://api.arcade.academy/en/latest/examples/timer.html#timer
+   timer: https://api.arcade.academy/en/latest/examples/timer.html#timer
