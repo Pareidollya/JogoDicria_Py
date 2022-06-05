@@ -1,9 +1,9 @@
 # JogoDicria_Py
 jogo dicria utilizando python arcade. Para avaliação de Processamento de imagens.
 
-objetivo: sobreviver o máximo.
+objetivo: Sobreviver o máximo.
 
-ideias pré-desenvolvimento:
+Ideias pré-desenvolvimento:
 
     mapa básico
 
@@ -27,7 +27,7 @@ ideias pré-desenvolvimento:
     tipos de inimigo
 
 
-desenvolvimento:
+Desenvolvimento:
 
     Funções de movimentação no: w a s d;
 
@@ -50,16 +50,16 @@ desenvolvimento:
 
 
 
-materiais de referencia utilizados 
+Materiais de referencia utilizados 
 
-   python arcade: https://api.arcade.academy/en/latest/index.html
+   Python arcade: https://api.arcade.academy/en/latest/index.html
 
-   movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard
+   Movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard
     
-   bouncing sprites: https://api.arcade.academy/en/latest/examples/sprite_collect_coins_move_bouncing.html#sprite-collect-coins-move-bouncing
+   Bouncing sprites: https://api.arcade.academy/en/latest/examples/sprite_collect_coins_move_bouncing.html#sprite-collect-coins-move-bouncing
 
-   follower sprites: https://api.arcade.academy/en/latest/examples/sprite_follow_simple.html#sprite-follow-simple
+   Follower sprites: https://api.arcade.academy/en/latest/examples/sprite_follow_simple.html#sprite-follow-simple
 
-   disparos: https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
+   Disparos: https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
 
-   timer: https://api.arcade.academy/en/latest/examples/timer.html#timer
+   Timer: https://api.arcade.academy/en/latest/examples/timer.html#timer
