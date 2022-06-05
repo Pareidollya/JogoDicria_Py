@@ -21,7 +21,7 @@ SPRITE_SCALING_COIN = 0.5
 COIN_COUNT = 35
 
 BULLET_SPEED = 7
-SPRITE_SCALING_LASER = 0.6  
+SPRITE_SCALING_LASER = 0.8
 
 FOLLOWER_SPRITE_COUNT = 9
 FOLLOWER_SPRITE_SPEED = 0.6
@@ -31,7 +31,7 @@ LIFE_SPRITE_SCALIING = 0.4
 
 MAX_AMMO = 10
 AMMO_SPRITE_SCALIING = 0.5
-MAX_AMMO_BOXES = 1
+MAX_AMMO_BOXES = 2
 
 class Player(arcade.Sprite): #classe do player
     def update(self):
@@ -91,7 +91,7 @@ class CoinFollower(arcade.Sprite):
     the arcade library's "Sprite" class.
     """
 
-    def follow_sprite(self, player_sprite):
+    def follow_sprite(self, player_sprite, speed):
         """
         This function will move the current sprite towards whatever
         other sprite is specified as a parameter.
@@ -101,14 +101,14 @@ class CoinFollower(arcade.Sprite):
         an exact multiple of SPRITE_SPEED.
         """
         if self.center_y < player_sprite.center_y:
-            self.center_y += min(FOLLOWER_SPRITE_SPEED, player_sprite.center_y - self.center_y)
+            self.center_y += min(speed, player_sprite.center_y - self.center_y)
         elif self.center_y > player_sprite.center_y:
-            self.center_y -= min(FOLLOWER_SPRITE_SPEED, self.center_y - player_sprite.center_y)
+            self.center_y -= min(speed, self.center_y - player_sprite.center_y)
 
         if self.center_x < player_sprite.center_x:
-            self.center_x += min(FOLLOWER_SPRITE_SPEED, player_sprite.center_x - self.center_x)
+            self.center_x += min(speed, player_sprite.center_x - self.center_x)
         elif self.center_x > player_sprite.center_x:
-            self.center_x -= min(FOLLOWER_SPRITE_SPEED, self.center_x - player_sprite.center_x)
+            self.center_x -= min(speed, self.center_x - player_sprite.center_x)
 #</follower sprites>
 
 class MyGame(arcade.Window):
@@ -435,7 +435,7 @@ class MyGame(arcade.Window):
         #<spawn followers>
             #<follower movement>
         for follower in self.follower_list:
-            follower.follow_sprite(self.player_sprite)
+            follower.follow_sprite(self.player_sprite, self.followers_speed)
 
         # Generate a list of all sprites that collided with the player.
         hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.follower_list)
@@ -476,7 +476,7 @@ class MyGame(arcade.Window):
 
         if(len(self.lifes_list) < 1):
             if(self.await_new_life_spawn == False):
-                self.next_life_respawn_time = self.total_time + random.randrange(5, 10)
+                self.next_life_respawn_time = self.total_time + random.randrange(5, 7)
                 self.await_new_life_spawn = True #so muda quando houver colisão com o player
 
             if(self.total_time >= self.next_life_respawn_time and self.await_new_life_spawn == True):
@@ -498,13 +498,13 @@ class MyGame(arcade.Window):
                 self.ammo = self.max_ammo
                 self.await_new_municao_spawn = False
         
-        if(len(self.municao_list) + 1 < self.max_ammo_boxes):
+        if(len(self.municao_list) <= self.max_ammo_boxes):
             if(self.await_new_municao_spawn == False):
                 self.next_municao_respawn_time = self.total_time + random.randrange(3, 7)
                 self.await_new_municao_spawn = True
 
             if(self.total_time >= self.next_municao_respawn_time and self.await_new_municao_spawn == True):
-                for i in range(self.max_ammo_boxes):
+                for i in range(self.max_ammo_boxes - len(self.municao_list)):
                     # Create the coin instancew
                     # Coin image from kenney.nl
                     ammo_box =  arcade.Sprite("public/max ammo.png", AMMO_SPRITE_SCALIING)
@@ -516,7 +516,7 @@ class MyGame(arcade.Window):
                     # Add the coin to the lists
                     self.all_sprites_list.append(ammo_box)
                     self.municao_list.append(ammo_box)
-
+                self.await_new_municao_spawn = False
         #<respawn muniçoes/>
 
         if(self.total_time > 50): #aumentar quantidade de inimigos com o tempo
