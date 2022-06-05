@@ -51,8 +51,11 @@ desenvolvimento:
 
 
 materiais de referencia utilizados 
-    movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard 
 
+    python arcade: https://api.arcade.academy/en/latest/index.html
+
+    movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard
+    
     bouncing sprites: https://api.arcade.academy/en/latest/examples/sprite_collect_coins_move_bouncing.html#sprite-collect-coins-move-bouncing
 
     follower sprites: https://api.arcade.academy/en/latest/examples/sprite_follow_simple.html#sprite-follow-simple
