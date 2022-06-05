@@ -54,7 +54,9 @@ Desenvolvimento:
 
     Spawn de vidas pelo mapa;
 
-    Limite de munição;
+    Limite de disparos com base na munição;
+
+    Spawn de caixas de munição pelo mapa e aumento de limite de munição com o tempo;
 
 
 
