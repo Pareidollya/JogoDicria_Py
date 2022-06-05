@@ -34,6 +34,7 @@ AMMO_SPRITE_SCALIING = 0.5
 MAX_AMMO_BOXES = 2
 
 MAX_DIAMONDS = 3
+MAX_DIAMOND_TIME = 5
 DIAMOND_SCALING = 0.1
 
 class Player(arcade.Sprite): #classe do player
@@ -243,6 +244,7 @@ class MyGame(arcade.Window):
 
         self.next_diamond_respawn_time = None
         self.await_new_diamond_spawn = False
+        self.max_diamond_time = None
         #</diamonds to win>
 
         
@@ -303,6 +305,7 @@ class MyGame(arcade.Window):
         #<diamonds to win>
         self.diamonds_to_win = MAX_DIAMONDS
         self.collected_diamonds = 0
+        self.max_diamond_time = MAX_DIAMOND_TIME
 
         self.diamonds_list = arcade.SpriteList()
         #</diamonds to win>
@@ -579,7 +582,6 @@ class MyGame(arcade.Window):
 
         #<diamonds to win>
         hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.diamonds_list)
-        # Loop through each colliding sprite, remove it, and add to the vidas.
         for diamond in hit_list:
             diamond.remove_from_sprite_lists()
             self.collected_diamonds += 1
@@ -601,7 +603,7 @@ class MyGame(arcade.Window):
         #<diamonds to win>
         else: #remover diamantes apos 15 segundos
             a = len(arcade.check_for_collision_with_list(self.player_sprite, self.diamonds_list))
-            if(self.total_time >= self.next_diamond_respawn_time + 10 and a == 0):
+            if(self.total_time >= self.next_diamond_respawn_time + self.max_diamond_time and a == 0):
                 for diamond in self.diamonds_list:
                     diamond.remove_from_sprite_lists()
 
@@ -626,6 +628,7 @@ class MyGame(arcade.Window):
             self.max_vidas = 7
 
             self.max_ammo_boxes = 2
+            self.max_diamond_time = 8
 
         if (self.total_time > 90):
             self.coin_count = 42
@@ -636,6 +639,7 @@ class MyGame(arcade.Window):
 
             
             self.max_ammo = 20
+            self.max_diamond_time = 7
 
         if (self.total_time > 120):
             self.coin_count = 45
@@ -647,6 +651,8 @@ class MyGame(arcade.Window):
             self.max_ammo_boxes = 3
 
             self.max_ammo = 25
+
+            self.max_diamond_time = 5
 
         #game over
             
