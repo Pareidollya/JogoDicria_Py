@@ -411,7 +411,10 @@ class MyGame(arcade.Window):
         elif (self.total_time > 80):
             self.max_followers = 15
             self.followers_speed = 1
-            
+
+        elif (self.total_time > 100):
+            self.max_followers = 16
+            self.followers_speed = 1.3
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -428,8 +431,6 @@ class MyGame(arcade.Window):
 
         elif key == arcade.key.D:
             self.player_sprite.change_x = MOVEMENT_SPEED
-
-  
 
     def on_key_release(self, key, modifiers):
 
