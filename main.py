@@ -26,7 +26,7 @@ SPRITE_SCALING_LASER = 0.6
 FOLLOWER_SPRITE_COUNT = 9
 FOLLOWER_SPRITE_SPEED = 0.6
 
-MAX_LIFES = 5
+MAX_LIFES = 1
 LIFE_SPRITE_SCALIING = 0.4
 
 MAX_AMMO = 10
@@ -147,14 +147,14 @@ class MyGame(arcade.Window):
         arcade.set_background_color(arcade.color.BLACK)
         
         #<timer build>
-        self.lose_position = 1 #adicionado para mudar a posição do tempo
+        self.lose_position = 1.07 #adicionado para mudar a posição do tempo
         self.font_size = 30
         
         self.total_time = 0.0
         self.timer_text = arcade.Text(
             text="00:00:00",
             start_x=SCREEN_WIDTH // 2,
-            start_y=SCREEN_HEIGHT // self.lose_position - 50 ,
+            start_y=SCREEN_HEIGHT // self.lose_position,
             color=arcade.color.WHITE,
             font_size= self.font_size,
             anchor_x="center",
@@ -221,7 +221,7 @@ class MyGame(arcade.Window):
         self.coin_count = COIN_COUNT
 
         # vidas
-        self.vidas = 5
+        self.vidas = MAX_LIFES
 
         self.max_vidas = MAX_LIFES
         #<adiçoes build moedas with boucing/>
@@ -287,48 +287,55 @@ class MyGame(arcade.Window):
         # This command has to happen before we start drawing
         self.clear()
         # Draw all the sprites.
-        self.player_list.draw()
+        if(self.vidas >= 0):
+            self.player_list.draw()
 
 
-        #<adiçoes build moedas with boucing>   
-        self.all_sprites_list.draw() 
-        # Put the text on the screen.
-        output = f"vidas: {self.vidas} / {self.max_vidas}"
-        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 20)
-        #<adiçoes build moedas with boucing/>
+            #<adiçoes build moedas with boucing>   
+            self.all_sprites_list.draw() 
+            # Put the text on the screen.
+            output = f"vidas: {self.vidas} / {self.max_vidas}"
+            arcade.draw_text(output, 10, 20, arcade.color.WHITE, 20)
+            #<adiçoes build moedas with boucing/>
 
-        #<timer>
-        # Draw the timer text
-        self.timer_text.draw()
-        #<timer/>
+            #<timer>
+            # Draw the timer text
+            self.timer_text.draw()
+            #<timer/>
 
-        #<shoot>
-        self.bullet_list.draw()
-        #</shoot>
+            #<shoot>
+            self.bullet_list.draw()
+            #</shoot>
 
-        #<coins debug>
-        coin_count = f"coin count: {len(self.coin_list)}"
-        arcade.draw_text(coin_count, 10, 50, arcade.color.WHITE, 14)
-        #</coins debug>
+            #<coins debug>
+            coin_count = f"coin count: {len(self.coin_list)}"
+            arcade.draw_text(coin_count, 10, 50, arcade.color.WHITE, 14)
+            #</coins debug>
 
-        #<follower sprites >
-        self.follower_list.draw()
+            #<follower sprites >
+            self.follower_list.draw()
 
-        follower_count = f"followers count: {len(self.follower_list)}"
-        arcade.draw_text(follower_count, 10, 70, arcade.color.WHITE, 14)
+            follower_count = f"followers count: {len(self.follower_list)}"
+            arcade.draw_text(follower_count, 10, 70, arcade.color.WHITE, 14)
 
-        #<follower sprites/>
+            #<follower sprites/>
 
-        #<rewspawn de vidas pelo mapa>
-        self.lifes_list.draw()
-        #<rewspawn de vidas pelo mapa>
+            #<rewspawn de vidas pelo mapa>
+            self.lifes_list.draw()
+            #<rewspawn de vidas pelo mapa>
 
-        #<respawn de munições>
-        self.municao_list.draw()
+            #<respawn de munições>
+            self.municao_list.draw()
 
-        ammo_count = f"Ammo: {self.ammo} / {self.max_ammo}"
-        arcade.draw_text(ammo_count, 10, 90, arcade.color.WHITE, 22)
-        #<respawn de munições>
+            ammo_count = f"Ammo: {self.ammo} / {self.max_ammo}"
+            arcade.draw_text(ammo_count, 10, 90, arcade.color.WHITE, 22)
+            #<respawn de munições>
+
+            #gameover
+        else:   
+            arcade.draw_text("YOU DIED", SCREEN_WIDTH//3, SCREEN_HEIGHT//1.8, arcade.color.RED, 50)
+            arcade.draw_text(self.timer_text.text, SCREEN_WIDTH//2.72, SCREEN_HEIGHT//2.5, arcade.color.WHITE, 50)
+            arcade.draw_text("Clique para sair.", SCREEN_WIDTH//2.43, SCREEN_HEIGHT//5, arcade.color.WHITE, 16)
 
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -350,17 +357,21 @@ class MyGame(arcade.Window):
         #<adiçoes build moedas with boucing/>
 
         #<timer>
-         # Accumulate the total time
-        self.total_time += delta_time
-        # Calculate minutes
-        minutes = int(self.total_time) // 60
-        # Calculate seconds by using a modulus (remainder)
-        seconds = int(self.total_time) % 60
+        if(self.vidas >= 0):
+            # Accumulate the total time
+            self.total_time += delta_time
+            # Calculate minutes
+            minutes = int(self.total_time) // 60
+            # Calculate seconds by using a modulus (remainder)
+            seconds = int(self.total_time) % 60
 
-        # Calculate 100s of a second
-        seconds_100s = int((self.total_time - seconds) * 100)
-        # Use string formatting to create a new text string for our timer
-        self.timer_text.text = f"{minutes:02d}:{seconds:02d}:{seconds_100s:02d}"
+            # Calculate 100s of a second
+            seconds_100s = int((self.total_time - seconds) * 100)
+            # Use string formatting to create a new text string for our timer
+            self.timer_text.text = f"{minutes:02d}:{seconds:02d}:{seconds_100s:02d}"
+        else:
+            self.lose_position = 2
+            self.font_size = 40
         #<timer/>
 
         #<shoot>
@@ -548,6 +559,10 @@ class MyGame(arcade.Window):
 
             self.max_ammo = 25
 
+        #game over
+            
+
+
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
@@ -619,6 +634,9 @@ class MyGame(arcade.Window):
         if(self.ammo > 0):
             self.ammo -= 1
             self.bullet_list.append(bullet)
+
+        if(self.vidas < 0):
+            arcade.exit()
     #</shoot>
     
 def main():
