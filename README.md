@@ -1,7 +1,7 @@
 # JogoDicria_Py
-jogo dicria utilizando python arcade. Para realização da prova de Processamento de imagens
+jogo dicria utilizando python arcade. Para avaliação de Processamento de imagens.
 
-objetivo: sobreviver o máximo
+objetivo: sobreviver o máximo.
 
 ideias pré-desenvolvimento:
 
