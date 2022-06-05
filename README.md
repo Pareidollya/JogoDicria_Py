@@ -58,7 +58,7 @@ Desenvolvimento:
 
     Spawn de caixas de munição pelo mapa e aumento de limite de munição com o tempo;
 
-
+    Tela de Game Over para encerrar o jogo;
 
 
 
