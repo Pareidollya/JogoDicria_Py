@@ -21,18 +21,19 @@ SPRITE_SCALING_COIN = 0.5
 COIN_COUNT = 35
 
 BULLET_SPEED = 9
-SPRITE_SCALING_LASER = 0.8
+SPRITE_SCALING_LASER = 0.6
 
 FOLLOWER_SPRITE_COUNT = 7
 FOLLOWER_SPRITE_SPEED = 0.6
+
+MAX_LIFES = 5
+LIFE_SPRITE_SCALIING = 0.4
 
 class Player(arcade.Sprite): #classe do player
     def update(self):
 
         """ Move the player """
-
         # Move player.
-
         # Remove these lines if physics engine is moving player.
         self.center_x += self.change_x
         self.center_y += self.change_y
@@ -95,7 +96,6 @@ class CoinFollower(arcade.Sprite):
         the target sprite, and not jump around if the sprite is not off
         an exact multiple of SPRITE_SPEED.
         """
-
         if self.center_y < player_sprite.center_y:
             self.center_y += min(FOLLOWER_SPRITE_SPEED, player_sprite.center_y - self.center_y)
         elif self.center_y > player_sprite.center_y:
@@ -128,13 +128,17 @@ class MyGame(arcade.Window):
         
         self.set_mouse_visible(True)
 
-         # vidas
+        # vidas
         self.all_sprites_list = None
+
+        
         self.coin_list = None
+        self.coin_count = None
+
         self.vidas = None #semelhante a vida porem ela diminui
+        self.max_vidas = None
+
         #<adiçoes build moedas with boucing/>
-
-
         # Set the background color
         arcade.set_background_color(arcade.color.BLACK)
         
@@ -183,6 +187,12 @@ class MyGame(arcade.Window):
         self.max_followers = None
         self.followers_speed = None
         #</follower sprites>
+
+        #<rewspawn de vidas pelo mapa>
+        self.lifes_list = None
+        self.next_life_respawn_time = None #tempo para spawn das proximas vida
+        self.await_new_life_spawn = False #caso ja haja uma no mapa
+        #</rewspawn de vidas pelo mapa>
     def setup(self):
         """ Configurar as variaveis iniciadas anteriormente """
 
@@ -193,8 +203,12 @@ class MyGame(arcade.Window):
         # Sprite lists
         self.all_sprites_list = arcade.SpriteList()
         self.coin_list = arcade.SpriteList()
+        self.coin_count = COIN_COUNT
+
         # vidas
         self.vidas = 5
+
+        self.max_vidas = MAX_LIFES
         #<adiçoes build moedas with boucing/>
 
         # Set up the player
@@ -221,7 +235,11 @@ class MyGame(arcade.Window):
         self.followers_speed = FOLLOWER_SPRITE_SPEED
         #</followers sprites>
 
-        for coins in range(COIN_COUNT):
+        #<rewspawn de vidas pelo mapa>
+        self.lifes_list = arcade.SpriteList()
+        #</rewspawn de vidas pelo mapa>
+
+        for coins in range(self.coin_count):
             # Create the coin instance
             # Coin image from kenney.nl
             coin = Coin(":resources:images/items/coinGold.png", SPRITE_SCALING_COIN)
@@ -277,6 +295,10 @@ class MyGame(arcade.Window):
         arcade.draw_text(follower_count, 10, 60, arcade.color.WHITE, 14)
 
         #<follower sprites/>
+
+        #<rewspawn de vidas pelo mapa>
+        self.lifes_list.draw()
+        #<rewspawn de vidas pelo mapa>
 
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -345,14 +367,14 @@ class MyGame(arcade.Window):
         #print(len(self.coin_list))
 
         #<respawn coins>
-        if len(self.coin_list) < COIN_COUNT:
+        if len(self.coin_list) < self.coin_count:
             if(self.await_new_coin_spawn == False):
                 self.next_coin_respawn_time = self.total_time + random.randrange(5, 10) #tempo de spawn de proximas moedas sera ate 20 sec
                 self.await_new_coin_spawn = True
             
             if(self.total_time >= self.next_coin_respawn_time and self.await_new_coin_spawn == True):
                 self.await_new_coin_spawn = False
-                for coins in range(COIN_COUNT - len(self.coin_list)):
+                for coins in range(self.coin_count - len(self.coin_list)):
                     # Create the coin instance
                     # Coin image from kenney.nl
                     coin = Coin(":resources:images/items/coinGold.png", SPRITE_SCALING_COIN)
@@ -404,17 +426,57 @@ class MyGame(arcade.Window):
         
         #<spawn followers/>
 
-        if(self.total_time > 60): #aumentar quantidade de inimigos com o tempo
+        #<respawn vidas>
+        hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.lifes_list) #colisão com player
+        for life in hit_list:
+            life.remove_from_sprite_lists()
+            if(self.vidas < self.max_vidas):
+                self.vidas += 1
+                self.await_new_life_spawn = False
+
+        if(len(self.lifes_list) < 1):
+            if(self.await_new_life_spawn == False):
+                self.next_life_respawn_time = self.total_time + random.randrange(5, 10)
+                self.await_new_life_spawn = True #so muda quando houver colisão com o player
+
+            if(self.total_time >= self.next_life_respawn_time and self.await_new_life_spawn == True):
+                vida = arcade.Sprite("public/vida.png", LIFE_SPRITE_SCALIING)
+
+                vida.center_x = random.randrange(SCREEN_WIDTH)
+                vida.center_y = random.randrange(SCREEN_HEIGHT)
+
+                self.all_sprites_list.append(vida)
+                self.lifes_list.append(vida)
+        #<respawn vidas/>
+
+        if(self.total_time > 50): #aumentar quantidade de inimigos com o tempo
+            self.coin_count = 40
+
             self.max_followers = 10
             self.followers_speed = 0.8
 
-        elif (self.total_time > 80):
+            self.max_vidas = 6
+
+        elif (self.total_time > 70):
+            self.coin_count = 42
             self.max_followers = 15
             self.followers_speed = 1
 
-        elif (self.total_time > 100):
+            self.max_vidas = 7
+
+        elif (self.total_time > 90):
+            self.coin_count = 45
             self.max_followers = 16
-            self.followers_speed = 1.3
+            self.followers_speed = 1.2
+
+            self.max_vidas = 9
+
+        elif (self.total_time > 120):
+            self.coin_count = 50
+            self.max_followers = 17
+            self.followers_speed = 1.5
+
+            self.max_vidas = 10
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
