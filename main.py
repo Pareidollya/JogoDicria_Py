@@ -401,8 +401,16 @@ class MyGame(arcade.Window):
                     self.all_sprites_list.append(follower)
                     self.follower_list.append(follower)
         
+        
         #<spawn followers/>
 
+        if(self.total_time > 60): #aumentar quantidade de inimigos com o tempo
+            self.max_followers = 10
+            self.followers_speed = 0.8
+
+        elif (self.total_time > 80):
+            self.max_followers = 15
+            self.followers_speed = 1
             
 
     def on_key_press(self, key, modifiers):
