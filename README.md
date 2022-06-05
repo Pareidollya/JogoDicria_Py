@@ -1,33 +1,38 @@
 # JogoDicria_Py
-jogo dicria utilizando python arcade. Para realização da prova de Processamento de imagens
+jogo dicria utilizando python arcade. Para avaliação de Processamento de imagens.
 
-objetivo: sobreviver o máximo
+objetivo: Sobreviver o máximo.
 
-ideias pré-desenvolvimento:
+Ideias pré-desenvolvimento:
 
-    mapa básico
+    mapa básico;
 
-    mecânicas básicas de movimentação 
+    mecânicas básicas de movimentação ;
 
-    spawn de inimigos 
+    spawn de inimigos;
 
-    direcionamento dos inimigos
-    colisão do inimigo ao player tirar vida
+    direcionamento dos inimigos;
+    
+    colisão do inimigo ao player e tirar vida;
 
-    direcionar inimigos ao player 
+    direcionar inimigos ao player;
 
-    mecânicas de disparo do player (similar projetil apresentado)
+    mecânicas de disparo do player;
 
-    colisão do disparo a inimigos (matar)
+    colisão do disparo a inimigos;
 
-    pontuação por kill
+    pontuação por kill;
 
-    aumentar a dificuldade por segundo passado. (surgir inimigos)
+    aumentar a dificuldade por segundo passado (surgir inimigos);
 
-    tipos de inimigo
+    tipos de inimigo;
+    
+    limitar numero de disparos (munição) - spawn ao disparar em tempo aleatório;
+    
+    recuperar vida - spawn ao perder vida em tempo aleatório;
 
 
-desenvolvimento:
+Desenvolvimento:
 
     Funções de movimentação no: w a s d;
 
@@ -38,6 +43,8 @@ desenvolvimento:
     Movimentação das sprites pelo mapa;
 
     Disparar;
+    
+    Timer para exibição do tempo e controlar mecanicas de resurgimento;
 
     Resurgir novos sprites caso esteja abaixo do numero configurado;
 
@@ -50,13 +57,16 @@ desenvolvimento:
 
 
 
-materiais de referencia utilizados 
-    movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard 
+Materiais de referencia utilizados 
 
-    bouncing sprites: https://api.arcade.academy/en/latest/examples/sprite_collect_coins_move_bouncing.html#sprite-collect-coins-move-bouncing
+   Python arcade: https://api.arcade.academy/en/latest/index.html
 
-    follower sprites: https://api.arcade.academy/en/latest/examples/sprite_follow_simple.html#sprite-follow-simple
+   Movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard
+    
+   Bouncing sprites: https://api.arcade.academy/en/latest/examples/sprite_collect_coins_move_bouncing.html#sprite-collect-coins-move-bouncing
 
-    disparos: https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
+   Follower sprites: https://api.arcade.academy/en/latest/examples/sprite_follow_simple.html#sprite-follow-simple
 
-    timer: https://api.arcade.academy/en/latest/examples/timer.html#timer
+   Disparos: https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
+
+   Timer: https://api.arcade.academy/en/latest/examples/timer.html#timer
