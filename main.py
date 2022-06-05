@@ -380,7 +380,7 @@ class MyGame(arcade.Window):
             self.diamonds_list.draw()
 
             diamond_count = f"Diamonds: {self.collected_diamonds} / {self.diamonds_to_win}"
-            arcade.draw_text(diamond_count, 10, 100, arcade.color.GREEN, 22)
+            arcade.draw_text(diamond_count, 10, 120, arcade.color.GREEN, 22)
             #<diamonds to win>
 
             #gameover
@@ -579,15 +579,14 @@ class MyGame(arcade.Window):
 
         #<diamonds to win>
         hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.diamonds_list)
-
         # Loop through each colliding sprite, remove it, and add to the vidas.
         for diamond in hit_list:
             diamond.remove_from_sprite_lists()
             self.collected_diamonds += 1
-        
-        if len(self.diamonds_list) == 0:
+
+        if len(self.diamonds_list) <= 0:
             if(self.await_new_diamond_spawn == False):
-                self.next_diamond_respawn_time = self.total_time + random.randrange(30,50) #tempo de spawn de proximos diamantes 
+                self.next_diamond_respawn_time = self.total_time + random.randrange(20,50) #tempo de spawn de proximos diamantes 
                 self.await_new_diamond_spawn = True
             
             if(self.total_time >= self.next_diamond_respawn_time and self.await_new_diamond_spawn == True):
@@ -600,6 +599,12 @@ class MyGame(arcade.Window):
                 self.diamonds_list.append(diamond)
                 self.await_new_diamond_spawn = False
         #<diamonds to win>
+        else: #remover diamantes apos 15 segundos
+            a = len(arcade.check_for_collision_with_list(self.player_sprite, self.diamonds_list))
+            if(self.total_time >= self.next_diamond_respawn_time + 10 and a == 0):
+                for diamond in self.diamonds_list:
+                    diamond.remove_from_sprite_lists()
+
 
         #aumentar quantidade de inimigos com o tempo
         if(self.total_time > 50): 
