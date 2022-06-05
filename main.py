@@ -270,8 +270,8 @@ class MyGame(arcade.Window):
         #<adiçoes build moedas with boucing>   
         self.all_sprites_list.draw() 
         # Put the text on the screen.
-        output = f"vidas: {self.vidas}"
-        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
+        output = f"vidas: {self.vidas} / {self.max_vidas}"
+        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 20)
         #<adiçoes build moedas with boucing/>
 
         #<timer>
@@ -285,14 +285,14 @@ class MyGame(arcade.Window):
 
         #<coins debug>
         coin_count = f"coin count: {len(self.coin_list)}"
-        arcade.draw_text(coin_count, 10, 40, arcade.color.WHITE, 14)
+        arcade.draw_text(coin_count, 10, 50, arcade.color.WHITE, 14)
         #</coins debug>
 
         #<follower sprites >
         self.follower_list.draw()
 
         follower_count = f"followers count: {len(self.follower_list)}"
-        arcade.draw_text(follower_count, 10, 60, arcade.color.WHITE, 14)
+        arcade.draw_text(follower_count, 10, 70, arcade.color.WHITE, 14)
 
         #<follower sprites/>
 
