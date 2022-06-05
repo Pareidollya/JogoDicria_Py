@@ -5,26 +5,31 @@ objetivo: Sobreviver o máximo.
 
 Ideias pré-desenvolvimento:
 
-    mapa básico
+    mapa básico;
 
-    mecânicas básicas de movimentação 
+    mecânicas básicas de movimentação ;
 
-    spawn de inimigos 
+    spawn de inimigos;
 
-    direcionamento dos inimigos
-    colisão do inimigo ao player tirar vida
+    direcionamento dos inimigos;
+    
+    colisão do inimigo ao player e tirar vida;
 
-    direcionar inimigos ao player 
+    direcionar inimigos ao player;
 
-    mecânicas de disparo do player (similar projetil apresentado)
+    mecânicas de disparo do player;
 
-    colisão do disparo a inimigos (matar)
+    colisão do disparo a inimigos;
 
-    pontuação por kill
+    pontuação por kill;
 
-    aumentar a dificuldade por segundo passado. (surgir inimigos)
+    aumentar a dificuldade por segundo passado (surgir inimigos);
 
-    tipos de inimigo
+    tipos de inimigo;
+    
+    limitar numero de disparos (munição) - spawn ao disparar em tempo aleatório;
+    
+    recuperar vida - spawn ao perder vida em tempo aleatório;
 
 
 Desenvolvimento:
@@ -38,6 +43,8 @@ Desenvolvimento:
     Movimentação das sprites pelo mapa;
 
     Disparar;
+    
+    Timer para exibição do tempo e controlar mecanicas de resurgimento;
 
     Resurgir novos sprites caso esteja abaixo do numero configurado;
 
