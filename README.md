@@ -2,6 +2,9 @@
 jogo dicria utilizando python arcade. Para realização da prova de Processamento de imagens
 
 objetivo: sobreviver o máximo
+
+ideias pré-desenvolvimento:
+
     mapa básico
 
     mecânicas básicas de movimentação 
@@ -38,12 +41,22 @@ desenvolvimento:
 
     Resurgir novos sprites caso esteja abaixo do numero configurado;
 
+    Sprites que seguem o player;
+
+    Aumentar numero de surgimentos e velocidade dos sprites conforme o tempo avance;
+
 
 
 
 
 
 materiais de referencia utilizados 
-movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard 
+    movimentação: https://api.arcade.academy/en/latest/examples/sprite_move_keyboard.html#sprite-move-keyboard 
 
-disparos: https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
+    bouncing sprites: https://api.arcade.academy/en/latest/examples/sprite_collect_coins_move_bouncing.html#sprite-collect-coins-move-bouncing
+
+    follower sprites: https://api.arcade.academy/en/latest/examples/sprite_follow_simple.html#sprite-follow-simple
+
+    disparos: https://api.arcade.academy/en/latest/examples/sprite_bullets_aimed.html#sprite-bullets-aimed
+
+    timer: https://api.arcade.academy/en/latest/examples/timer.html#timer
