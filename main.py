@@ -31,6 +31,7 @@ LIFE_SPRITE_SCALIING = 0.4
 
 MAX_AMMO = 10
 AMMO_SPRITE_SCALIING = 0.5
+MAX_AMMO_BOXES = 1
 
 class Player(arcade.Sprite): #classe do player
     def update(self):
@@ -204,6 +205,7 @@ class MyGame(arcade.Window):
         self.municao_list = None
         self.next_municao_respawn_time = None #tempo para spawn das proximas munições
         self.await_new_municao_spawn = False
+        self.max_ammo_boxes = None
         #</munições>
         
     def setup(self):
@@ -256,7 +258,7 @@ class MyGame(arcade.Window):
         self.max_ammo = MAX_AMMO
         self.ammo= self.max_ammo
         self.municao_list = arcade.SpriteList() #munições pelo mapa
-
+        self.max_ammo_boxes = MAX_AMMO_BOXES
 
         #<respawn de munições>
 
@@ -420,7 +422,7 @@ class MyGame(arcade.Window):
         #</respawn coins>
         
         #<spawn followers>
-        #<follower movement>
+            #<follower movement>
         for follower in self.follower_list:
             follower.follow_sprite(self.player_sprite)
 
@@ -431,7 +433,7 @@ class MyGame(arcade.Window):
         for follower in hit_list:
             follower.remove_from_sprite_lists()
             self.vidas -= 1
-        #<follower movement>
+            #<follower movement>
         if len(self.follower_list) < self.max_followers:
             if(self.await_new_follower_spawn == False):
                 self.next_follower_respawn_time = self.total_time + random.randrange(7, 15)
@@ -451,8 +453,6 @@ class MyGame(arcade.Window):
                     # Add the coin to the lists
                     self.all_sprites_list.append(follower)
                     self.follower_list.append(follower)
-        
-        
         #<spawn followers/>
 
         #<respawn vidas>
@@ -478,6 +478,36 @@ class MyGame(arcade.Window):
                 self.lifes_list.append(vida)
         #<respawn vidas/>
 
+        #<respawn munições>
+        hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.municao_list) #colisão com player
+
+        for municao in hit_list:
+            municao.remove_from_sprite_lists()
+            if(self.ammo < self.max_ammo):
+                self.ammo = self.max_ammo
+                self.await_new_municao_spawn = False
+        
+        if(len(self.municao_list) + 1 < self.max_ammo_boxes):
+            if(self.await_new_municao_spawn == False):
+                self.next_municao_respawn_time = self.total_time + random.randrange(3, 7)
+                self.await_new_municao_spawn = True
+
+            if(self.total_time >= self.next_municao_respawn_time and self.await_new_municao_spawn == True):
+                for i in range(self.max_ammo_boxes):
+                    # Create the coin instancew
+                    # Coin image from kenney.nl
+                    ammo_box =  arcade.Sprite("public/max ammo.png", AMMO_SPRITE_SCALIING)
+
+                    # Position the coin
+                    ammo_box.center_x = random.randrange(SCREEN_WIDTH)
+                    ammo_box.center_y = random.randrange(SCREEN_HEIGHT)
+
+                    # Add the coin to the lists
+                    self.all_sprites_list.append(ammo_box)
+                    self.municao_list.append(ammo_box)
+
+        #<respawn muniçoes/>
+
         if(self.total_time > 50): #aumentar quantidade de inimigos com o tempo
             self.coin_count = 36
 
@@ -486,12 +516,16 @@ class MyGame(arcade.Window):
 
             self.max_vidas = 6
 
+            self.max_ammo = 15
+
         if (self.total_time > 70):
             self.coin_count = 38
             self.max_followers = 15
             self.followers_speed = 1
 
             self.max_vidas = 7
+
+            self.max_ammo_boxes = 2
 
         if (self.total_time > 90):
             self.coin_count = 42
@@ -500,12 +534,19 @@ class MyGame(arcade.Window):
 
             self.max_vidas = 9
 
+            
+            self.max_ammo = 20
+
         if (self.total_time > 120):
             self.coin_count = 45
             self.max_followers = 20
             self.followers_speed = 1.5
 
             self.max_vidas = 10
+
+            self.max_ammo_boxes = 3
+
+            self.max_ammo = 25
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
