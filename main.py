@@ -9,8 +9,8 @@ import os
 
 SPRITE_SCALING = 0.5
 
-SCREEN_WIDTH = 960
-SCREEN_HEIGHT = 768
+SCREEN_WIDTH = 1024 #defaulte 960x768
+SCREEN_HEIGHT = 820
 SCREEN_TITLE = "Jogo Processamento de imagens"
 
 MOVEMENT_SPEED = 4
@@ -20,14 +20,17 @@ SPRITE_SCALING_PLAYER = 0.4
 SPRITE_SCALING_COIN = 0.5
 COIN_COUNT = 35
 
-BULLET_SPEED = 9
-SPRITE_SCALING_LASER = 0.6
+BULLET_SPEED = 7
+SPRITE_SCALING_LASER = 0.6  
 
-FOLLOWER_SPRITE_COUNT = 7
+FOLLOWER_SPRITE_COUNT = 9
 FOLLOWER_SPRITE_SPEED = 0.6
 
 MAX_LIFES = 5
 LIFE_SPRITE_SCALIING = 0.4
+
+MAX_AMMO = 10
+AMMO_SPRITE_SCALIING = 0.5
 
 class Player(arcade.Sprite): #classe do player
     def update(self):
@@ -193,6 +196,16 @@ class MyGame(arcade.Window):
         self.next_life_respawn_time = None #tempo para spawn das proximas vida
         self.await_new_life_spawn = False #caso ja haja uma no mapa
         #</rewspawn de vidas pelo mapa>
+
+        #<munições> 
+        self.ammo = None
+        self.max_ammo = None
+
+        self.municao_list = None
+        self.next_municao_respawn_time = None #tempo para spawn das proximas munições
+        self.await_new_municao_spawn = False
+        #</munições>
+        
     def setup(self):
         """ Configurar as variaveis iniciadas anteriormente """
 
@@ -238,6 +251,14 @@ class MyGame(arcade.Window):
         #<rewspawn de vidas pelo mapa>
         self.lifes_list = arcade.SpriteList()
         #</rewspawn de vidas pelo mapa>
+
+        #<respawn de munições>
+        self.max_ammo = MAX_AMMO
+        self.ammo= self.max_ammo
+        self.municao_list = arcade.SpriteList() #munições pelo mapa
+
+
+        #<respawn de munições>
 
         for coins in range(self.coin_count):
             # Create the coin instance
@@ -300,6 +321,13 @@ class MyGame(arcade.Window):
         self.lifes_list.draw()
         #<rewspawn de vidas pelo mapa>
 
+        #<respawn de munições>
+        self.municao_list.draw()
+
+        ammo_count = f"Ammo: {self.ammo} / {self.max_ammo}"
+        arcade.draw_text(ammo_count, 10, 90, arcade.color.WHITE, 22)
+        #<respawn de munições>
+
     def on_update(self, delta_time):
         """ Movement and game logic """
         # Move the player
@@ -334,6 +362,7 @@ class MyGame(arcade.Window):
         #<timer/>
 
         #<shoot>
+        
         self.bullet_list.update()
         # Loop through each bullet  
         for bullet in self.bullet_list:
@@ -369,7 +398,7 @@ class MyGame(arcade.Window):
         #<respawn coins>
         if len(self.coin_list) < self.coin_count:
             if(self.await_new_coin_spawn == False):
-                self.next_coin_respawn_time = self.total_time + random.randrange(5, 10) #tempo de spawn de proximas moedas sera ate 20 sec
+                self.next_coin_respawn_time = self.total_time + random.randrange(3, 12) #tempo de spawn de proximas moedas sera ate 20 sec
                 self.await_new_coin_spawn = True
             
             if(self.total_time >= self.next_coin_respawn_time and self.await_new_coin_spawn == True):
@@ -450,30 +479,30 @@ class MyGame(arcade.Window):
         #<respawn vidas/>
 
         if(self.total_time > 50): #aumentar quantidade de inimigos com o tempo
-            self.coin_count = 40
+            self.coin_count = 36
 
-            self.max_followers = 10
+            self.max_followers = 13
             self.followers_speed = 0.8
 
             self.max_vidas = 6
 
-        elif (self.total_time > 70):
-            self.coin_count = 42
+        if (self.total_time > 70):
+            self.coin_count = 38
             self.max_followers = 15
             self.followers_speed = 1
 
             self.max_vidas = 7
 
-        elif (self.total_time > 90):
-            self.coin_count = 45
-            self.max_followers = 16
+        if (self.total_time > 90):
+            self.coin_count = 42
+            self.max_followers = 18
             self.followers_speed = 1.2
 
             self.max_vidas = 9
 
-        elif (self.total_time > 120):
-            self.coin_count = 50
-            self.max_followers = 17
+        if (self.total_time > 120):
+            self.coin_count = 45
+            self.max_followers = 20
             self.followers_speed = 1.5
 
             self.max_vidas = 10
@@ -512,8 +541,8 @@ class MyGame(arcade.Window):
       #<shoot>
     def on_mouse_press(self, x, y, button, modifiers):
         """ Called whenever the mouse button is clicked. """
-
         # Create a bullet
+        
         bullet = arcade.Sprite(":resources:images/space_shooter/laserBlue01.png", SPRITE_SCALING_LASER)
 
         # Position the bullet at the player's current location
@@ -546,7 +575,9 @@ class MyGame(arcade.Window):
         bullet.change_y = math.sin(angle) * BULLET_SPEED
 
         # Add the bullet to the appropriate lists
-        self.bullet_list.append(bullet)
+        if(self.ammo > 0):
+            self.ammo -= 1
+            self.bullet_list.append(bullet)
     #</shoot>
     
 def main():
