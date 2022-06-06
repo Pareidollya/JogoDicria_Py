@@ -60,6 +60,15 @@ Desenvolvimento e mecânicas em funcionamento:
 
     Tela de Game Over para encerrar o jogo;
 
+    Diamantes aparecerem no mapa e sumirem após um tempo;
+
+    Coletar 3 diamantes = vitória;
+
+    
+
+
+
+
 
 
 
