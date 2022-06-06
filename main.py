@@ -26,7 +26,7 @@ SPRITE_SCALING_LASER = 0.8
 FOLLOWER_SPRITE_COUNT = 9
 FOLLOWER_SPRITE_SPEED = 0.8
 
-MAX_LIFES = 500
+MAX_LIFES = 5
 LIFE_SPRITE_SCALIING = 0.4
 
 MAX_AMMO = 10
@@ -34,8 +34,8 @@ AMMO_SPRITE_SCALIING = 0.5
 MAX_AMMO_BOXES = 2
 
 MAX_DIAMONDS = 3
-MAX_DIAMOND_TIME = 5
-DIAMOND_SCALING = 0.1
+MAX_DIAMOND_TIME = 6
+DIAMOND_SCALING = 0.13
 
 class Player(arcade.Sprite): #classe do player
     def update(self):
@@ -219,6 +219,9 @@ class MyGame(arcade.Window):
 
         self.max_followers = None
         self.followers_speed = None
+
+        self.await_reposition = None
+        self.next_reposition_time = None
         #</follower sprites>
 
         #<rewspawn de vidas pelo mapa>
@@ -335,15 +338,14 @@ class MyGame(arcade.Window):
         # This command has to happen before we start drawing
         self.clear()
         # Draw all the sprites.
-        if(self.vidas >= 0):
+        if(self.vidas >= 0 and self.collected_diamonds < self.diamonds_to_win):
             self.player_list.draw()
 
 
             #<adiçoes build moedas with boucing>   
             self.all_sprites_list.draw() 
             # Put the text on the screen.
-            output = f"vidas: {self.vidas} / {self.max_vidas}"
-            arcade.draw_text(output, 10, 20, arcade.color.WHITE, 20)
+            
             #<adiçoes build moedas with boucing/>
 
             #<timer>
@@ -356,15 +358,15 @@ class MyGame(arcade.Window):
             #</shoot>
 
             #<coins debug>
-            coin_count = f"coin count: {len(self.coin_list)}"
-            arcade.draw_text(coin_count, 10, 50, arcade.color.WHITE, 14)
+            # coin_count = f"coin count: {len(self.coin_list)}"
+            # arcade.draw_text(coin_count, 10, 50, arcade.color.WHITE, 14)
             #</coins debug>
 
             #<follower sprites >
             self.follower_list.draw()
 
-            follower_count = f"followers count: {len(self.follower_list)}"
-            arcade.draw_text(follower_count, 10, 70, arcade.color.WHITE, 14)
+            # follower_count = f"followers count: {len(self.follower_list)}"
+            # arcade.draw_text(follower_count, 10, 70, arcade.color.WHITE, 14)
 
             #<follower sprites/>
 
@@ -379,6 +381,10 @@ class MyGame(arcade.Window):
             arcade.draw_text(ammo_count, 10, 90, arcade.color.WHITE, 22)
             #<respawn de munições>
 
+            #<vidas>
+            output = f"vidas: {self.vidas} / {self.max_vidas}"
+            arcade.draw_text(output, 10, 20, arcade.color.WHITE, 20)
+            #<vidaas>
             #<diamonds to win>
             self.diamonds_list.draw()
 
@@ -387,9 +393,15 @@ class MyGame(arcade.Window):
             #<diamonds to win>
 
             #gameover
+        elif(self.collected_diamonds == self.diamonds_to_win):
+            arcade.draw_text("YOU WON :D", SCREEN_WIDTH//3.2, SCREEN_HEIGHT//1.8, arcade.color.GREEN, 50)
+            arcade.draw_text(self.timer_text.text, SCREEN_WIDTH//2.72, SCREEN_HEIGHT//2.5, arcade.color.WHITE, 50)
+            arcade.draw_text(f"Diamonds: {self.collected_diamonds} / {self.diamonds_to_win}", SCREEN_WIDTH//2.43, SCREEN_HEIGHT//3.5, arcade.color.WHITE, 16)
+            arcade.draw_text("Clique para sair.", SCREEN_WIDTH//2.43, SCREEN_HEIGHT//5, arcade.color.WHITE, 16)
         else:   
             arcade.draw_text("YOU DIED", SCREEN_WIDTH//3, SCREEN_HEIGHT//1.8, arcade.color.RED, 50)
             arcade.draw_text(self.timer_text.text, SCREEN_WIDTH//2.72, SCREEN_HEIGHT//2.5, arcade.color.WHITE, 50)
+            arcade.draw_text(f"Diamonds: {self.collected_diamonds} / {self.diamonds_to_win}", SCREEN_WIDTH//2.43, SCREEN_HEIGHT//3.5, arcade.color.WHITE, 16)
             arcade.draw_text("Clique para sair.", SCREEN_WIDTH//2.43, SCREEN_HEIGHT//5, arcade.color.WHITE, 16)
 
     def on_update(self, delta_time):
@@ -413,7 +425,7 @@ class MyGame(arcade.Window):
 
 
         #<timer>
-        if(self.vidas >= 0):
+        if(self.vidas >= 0 and self.collected_diamonds < self.diamonds_to_win):
             # Accumulate the total time
             self.total_time += delta_time
             # Calculate minutes
@@ -507,7 +519,9 @@ class MyGame(arcade.Window):
         if len(self.follower_list) < self.max_followers:
             if(self.await_new_follower_spawn == False):
                 self.next_follower_respawn_time = self.total_time + random.randrange(7, 15)
+                self.next_reposition_time  = self.next_follower_respawn_time + 15
                 self.await_new_follower_spawn = True
+                self.await_reposition = True
 
             if(self.total_time >= self.next_follower_respawn_time and self.await_new_follower_spawn == True):   
                 self.await_new_follower_spawn = False
@@ -524,7 +538,24 @@ class MyGame(arcade.Window):
                     self.all_sprites_list.append(follower)
                     self.follower_list.append(follower)
 
+        # if(self.total_time >= self.next_reposition_time and self.await_new_follower_spawn == True):
+        #     print('cucuSFDFSDFcuc')
+        #     num_respawns = len(self.follower_list) 
+        #     for follower in self.follower_list:
+        #         follower.remove_from_sprite_lists()
+            
+        #     for i in range(num_respawns):
+        #             # Create the coin instance
+        #             # Coin image from kenney.nl
+        #             follower = CoinFollower(":resources:images/items/coinGold.png", SPRITE_SCALING_COIN)
 
+        #             # Position the coin
+        #             follower.center_x = random.randrange(SCREEN_WIDTH)
+        #             follower.center_y = random.randrange(SCREEN_HEIGHT)
+
+        #             # Add the coin to the lists
+        #             self.all_sprites_list.append(follower)
+        #             self.follower_list.append(follower)
         #<spawn followers/>
 
         #<respawn vidas>
@@ -588,7 +619,7 @@ class MyGame(arcade.Window):
 
         if len(self.diamonds_list) <= 0:
             if(self.await_new_diamond_spawn == False):
-                self.next_diamond_respawn_time = self.total_time + random.randrange(20,50) #tempo de spawn de proximos diamantes 
+                self.next_diamond_respawn_time = self.total_time + random.randrange(11,26) #tempo de spawn de proximos diamantes 
                 self.await_new_diamond_spawn = True
             
             if(self.total_time >= self.next_diamond_respawn_time and self.await_new_diamond_spawn == True):
@@ -620,6 +651,7 @@ class MyGame(arcade.Window):
 
             self.max_ammo = 15
 
+
         if (self.total_time > 70):
             self.coin_count = 38
             self.max_followers = 15
@@ -628,7 +660,7 @@ class MyGame(arcade.Window):
             self.max_vidas = 7
 
             self.max_ammo_boxes = 2
-            self.max_diamond_time = 8
+            
 
         if (self.total_time > 90):
             self.coin_count = 42
@@ -639,7 +671,7 @@ class MyGame(arcade.Window):
 
             
             self.max_ammo = 20
-            self.max_diamond_time = 7
+            self.max_diamond_time = 3
 
         if (self.total_time > 120):
             self.coin_count = 45
@@ -652,7 +684,6 @@ class MyGame(arcade.Window):
 
             self.max_ammo = 25
 
-            self.max_diamond_time = 5
 
         #game over
             
@@ -730,7 +761,7 @@ class MyGame(arcade.Window):
             self.ammo -= 1
             self.bullet_list.append(bullet)
 
-        if(self.vidas < 0):
+        if(self.vidas < 0 or self.collected_diamonds >= self.diamonds_to_win):
             arcade.exit()
     #</shoot>
     
